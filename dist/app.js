@@ -13,9 +13,10 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // Routes
+app.use('/api/auth', authRouter);
+// Handler Routes
 app.use(notFoundHandler);
 app.use(errorHandler);
-app.use('/api/auth', authRouter);
 // Sample route
 app.get('/', (req, res) => {
     res.send('Welcome to the MFlix Backend!');

@@ -33,7 +33,8 @@ export const register = async (req, res) => {
         sendSuccess(res, { id: userId, ...newUser }, "User registered successfully");
     }
     catch (error) {
-        errorHandler({ status: 500, message: "Server error during registration" }, req, res, () => { });
+        console.error("Registration Error:", error);
+        errorHandler({ status: 500, message: error.message || "Server error during registration" }, req, res, () => { });
     }
 };
 export const login = async (req, res) => {

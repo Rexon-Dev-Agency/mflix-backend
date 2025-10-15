@@ -37,8 +37,9 @@ export const register = async (req: Request, res: Response) => {
         const userRef = await usersCollection.add(newUser);
         const userId = userRef.id;
         sendSuccess(res, { id: userId, ...newUser }, "User registered successfully");
-    } catch (error) {
-        errorHandler({ status: 500, message: "Server error during registration" }, req, res, () => { }); 
+    } catch (error: any) {
+        console.error("Registration Error:", error);
+        errorHandler({ status: 500, message: error.message || "Server error during registration" }, req, res, () => { }); 
     }
 }
 
