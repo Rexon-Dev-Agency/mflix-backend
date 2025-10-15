@@ -1,15 +1,19 @@
-import type { Firestore } from "@google-cloud/firestore";
 import admin from "firebase-admin";
 import { Auth } from "firebase-admin/auth";
-import serviceAccountJson from "../config/mflix-app-fd437-firebase-adminsdk-fbsvc-8a750bbda0.json" with { type: "json" }; // adjust path
 
-const serviceAccount = serviceAccountJson as admin.ServiceAccount;
+const serviceAccount = {
+  projectId: process.env.FIREBASE_PROJECT_ID!,
+  clientEmail: process.env.FIREBASE_CLIENT_EMAIL!,
+  privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n")!,
+} as admin.ServiceAccount;
 
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-  });
+if (!serviceAccount.projectId || !serviceAccount.clientEmail || !serviceAccount.privateKey) {
+  throw new Error("Missing Firebase service account environment variables");
 }
 
-export const db: Firestore = admin.firestore();
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
+
+export const db = admin.firestore();
 export const auth: Auth = admin.auth();
