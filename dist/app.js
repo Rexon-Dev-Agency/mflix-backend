@@ -6,6 +6,7 @@ import { authRouter } from './routes/authRoutes.js';
 import { errorHandler } from './handlers/errorHandlers.js';
 import { notFoundHandler } from './handlers/notFoundHandler.js';
 dotenv.config();
+import './config/firebase.js'; // Ensure environment variables are loaded before this import
 const app = express();
 // Middleware
 app.use(helmet());
