@@ -9,6 +9,8 @@ import { notFoundHandler } from './handlers/notFoundHandler.js';
 
 dotenv.config();
 
+import './config/firebase.js'; // Ensure environment variables are loaded before this import
+
 const app: Application = express();
 
 // Middleware
