@@ -1,14 +1,12 @@
 import admin from "firebase-admin";
 import { Auth } from "firebase-admin/auth";
+import { FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY } from "../env.js";
 
-console.log('FIREBASE_PROJECT_ID:', process.env.FIREBASE_PROJECT_ID);
-console.log('FIREBASE_CLIENT_EMAIL:', process.env.FIREBASE_CLIENT_EMAIL);
-console.log('FIREBASE_PRIVATE_KEY:', process.env.FIREBASE_PRIVATE_KEY ? 'Loaded' : 'Missing');
 
 const serviceAccount = {
-  projectId: process.env.FIREBASE_PROJECT_ID!,
-  clientEmail: process.env.FIREBASE_CLIENT_EMAIL!,
-  privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n")!,
+  projectId: FIREBASE_PROJECT_ID!,
+  clientEmail: FIREBASE_CLIENT_EMAIL!,
+  privateKey: FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n")!,
 } as admin.ServiceAccount;
 
 if (!serviceAccount.projectId || !serviceAccount.clientEmail || !serviceAccount.privateKey) {

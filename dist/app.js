@@ -1,12 +1,10 @@
 import express from 'express';
-import dotenv from 'dotenv';
 import helmet from 'helmet';
 import morgan from 'morgan';
+// Do NOT import firebase or dotenv here. Only import routers and handlers.
 import { authRouter } from './routes/authRoutes.js';
 import { errorHandler } from './handlers/errorHandlers.js';
 import { notFoundHandler } from './handlers/notFoundHandler.js';
-dotenv.config();
-import './config/firebase.js'; // Ensure environment variables are loaded before this import
 const app = express();
 // Middleware
 app.use(helmet());
