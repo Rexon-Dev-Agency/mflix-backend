@@ -1,6 +1,6 @@
 import type{ Request, Response } from "express";
 import { db } from "../config/firebase.js";
-import { hashPassword } from "../utils/passwordHashing.js";
+import { comparePasswords, hashPassword } from "../utils/passwordHashing.js";
 import { sendSuccess } from "../handlers/responseHandler.js";
 import { errorHandler } from "../handlers/errorHandlers.js";
 import { formatDate } from "../utils/helper.js";
@@ -28,9 +28,10 @@ export const register = async (req: Request, res: Response) => {
             errorHandler({ status: 409, message: "Email already in use" }, req, res, () => { });
             return
         }
+        const hashedPassword = await hashPassword(password);
         const newUser = {
             email,
-            password,
+            password: hashedPassword,
             displayName: email.split("@")[0],
             createdAt: formatDate(new Date()),
         };
@@ -58,7 +59,6 @@ export const login = async (req: Request, res: Response) => {
     try{
         const userSnapshot = await usersCollection
             .where("email", "==", email)
-            .where("password", "==", password)
             .get();
 
         if (userSnapshot.empty) {
@@ -71,10 +71,17 @@ export const login = async (req: Request, res: Response) => {
             errorHandler({ status: 401, message: "Invalid email or password" }, req, res, () => {});
             return
         }
+        
+        const userData = userDoc.data();
+        
+        const isPasswaordValid = await comparePasswords(password, userData.password);
+        
+        if (!isPasswaordValid) {
+            return errorHandler({ status: 401, message: "Invalid email or password" }, req, res, () => { });
+        }
 
         const userId = userDoc.id;
-        const userData = userDoc.data();
-
+        
         sendSuccess(res, { id: userId, ...userData }, "Login successful");
     } catch (error) {
         errorHandler({ status: 500, message: "Server error during login" }, req, res, () => { });
