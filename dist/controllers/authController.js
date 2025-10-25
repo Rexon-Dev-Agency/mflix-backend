@@ -4,9 +4,13 @@ import { sendSuccess } from "../handlers/responseHandler.js";
 import { errorHandler } from "../handlers/errorHandlers.js";
 import { formatDate } from "../utils/helper.js";
 import { isValidEmail, isValidPassword } from "../utils/validation.js";
+import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../utils/token.js";
+import { hashToken } from "../utils/crypto.js";
+import { saveRefreshTokenRecord, findRefreshTokenRecord, revokeRefreshTokenRecord } from "../services/refreshTokenService.js";
 const usersCollection = db.collection("users");
 export const register = async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password: rawPassword } = req.body;
+    const password = rawPassword.trim();
     if (!email || !password) {
         return errorHandler({ status: 400, message: "Email and password are required" }, req, res, () => { });
     }
@@ -39,7 +43,8 @@ export const register = async (req, res) => {
     }
 };
 export const login = async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password: rawPassword } = req.body;
+    const password = rawPassword.trim();
     if (!email || !password) {
         return errorHandler({ status: 400, message: "Email and password are required" }, req, res, () => { });
     }
@@ -67,10 +72,51 @@ export const login = async (req, res) => {
             return errorHandler({ status: 401, message: "Invalid email or password" }, req, res, () => { });
         }
         const userId = userDoc.id;
-        sendSuccess(res, { id: userId, ...userData }, "Login successful");
+        // generate tokens
+        const accessToken = generateAccessToken({ sub: userId, email });
+        const refreshToken = generateRefreshToken({ sub: userId });
+        // save hashed refresh token
+        const hashed = hashToken(refreshToken);
+        await saveRefreshTokenRecord(userId, hashed);
+        sendSuccess(res, { accessToken, refreshToken, id: userId, ...userData }, "Login successful");
     }
     catch (error) {
         errorHandler({ status: 500, message: "Server error during login" }, req, res, () => { });
     }
+};
+export const refresh = async (req, res) => {
+    const { refreshToken } = req.body;
+    if (!refreshToken)
+        return errorHandler({ status: 401, message: 'No refresh token provided' }, req, res, () => { });
+    let payload;
+    try {
+        payload = verifyRefreshToken(refreshToken);
+    }
+    catch (err) {
+        return errorHandler({ status: 401, message: 'Invalid refresh token' }, req, res, () => { });
+    }
+    const userId = payload.sub;
+    const hashed = hashToken(refreshToken);
+    const record = await findRefreshTokenRecord(hashed);
+    if (!record || record.revoked) {
+        return errorHandler({ status: 401, message: 'Refresh token revoked or not found' }, req, res, () => { });
+    }
+    // rotate: revoke old and issue new
+    await revokeRefreshTokenRecord(record.id);
+    const newRefreshToken = generateRefreshToken({ sub: userId });
+    const newHashed = hashToken(newRefreshToken);
+    await saveRefreshTokenRecord(userId, newHashed);
+    const newAccessToken = generateAccessToken({ sub: userId });
+    sendSuccess(res, { accessToken: newAccessToken, refreshToken: newRefreshToken }, 'Tokens refreshed');
+};
+export const logout = async (req, res) => {
+    const { refreshToken } = req.body;
+    if (!refreshToken)
+        return sendSuccess(res, {}, 'Logged out');
+    const hashed = hashToken(refreshToken);
+    const record = await findRefreshTokenRecord(hashed);
+    if (record)
+        await revokeRefreshTokenRecord(record.id);
+    sendSuccess(res, {}, 'Logged out');
 };
 //# sourceMappingURL=authController.js.map
