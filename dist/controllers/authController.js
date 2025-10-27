@@ -81,6 +81,7 @@ export const login = async (req, res) => {
         sendSuccess(res, { accessToken, refreshToken, id: userId, ...userData }, "Login successful");
     }
     catch (error) {
+        console.error("Login Error:", error);
         errorHandler({ status: 500, message: "Server error during login" }, req, res, () => { });
     }
 };

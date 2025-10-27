@@ -1,4 +1,5 @@
 import { db } from '../config/firebase.js';
+import { REFRESH_TOKEN_EXPIRES_IN } from '../env.js';
 
 type TokenRecord = {
   userId: string;
@@ -10,13 +11,28 @@ type TokenRecord = {
 
 const collection = db.collection('refreshTokens');
 
+const parseExpiry = (expiry: string): number => {
+  const num = parseInt(expiry);
+  if (expiry.endsWith('d')) return num * 24 * 60 * 60 * 1000;
+  if (expiry.endsWith('h')) return num * 60 * 60 * 1000;
+  if (expiry.endsWith('m')) return num * 60 * 1000;
+  return num; // fallback (e.g., raw ms)
+};
+
+
 export const saveRefreshTokenRecord = async (userId: string, hash: string, expiresAt?: number) => {
+  const now = Date.now();
+
+  const expiryTime = 
+    expiresAt ??
+    now + parseExpiry(REFRESH_TOKEN_EXPIRES_IN!);
+
   const rec: TokenRecord = {
     userId,
     hash,
     revoked: false,
     createdAt: Date.now(),
-    expiresAt,
+    expiresAt: expiryTime,
   };
   await collection.add(rec);
 };

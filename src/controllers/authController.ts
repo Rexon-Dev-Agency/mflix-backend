@@ -95,7 +95,8 @@ export const login = async (req: Request, res: Response) => {
         await saveRefreshTokenRecord(userId, hashed);
 
         sendSuccess(res, { accessToken, refreshToken, id: userId, ...userData }, "Login successful");
-    } catch (error) {
+    } catch (error: any) {
+        console.error("Login Error:", error);
         errorHandler({ status: 500, message: "Server error during login" }, req, res, () => { });
     }
 };

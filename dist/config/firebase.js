@@ -12,6 +12,7 @@ if (!serviceAccount.projectId || !serviceAccount.clientEmail || !serviceAccount.
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
 });
+admin.firestore().settings({ ignoreUndefinedProperties: true });
 export const db = admin.firestore();
 export const auth = admin.auth();
 //# sourceMappingURL=firebase.js.map
