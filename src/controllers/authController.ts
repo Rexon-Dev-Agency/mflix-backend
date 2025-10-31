@@ -38,6 +38,7 @@ export const register = async (req: Request, res: Response) => {
             password: hashedPassword,
             displayName: email.split("@")[0],
             createdAt: formatDate(new Date()),
+            role: "user",
         };
         const userRef = await usersCollection.add(newUser);
         const userId = userRef.id;
