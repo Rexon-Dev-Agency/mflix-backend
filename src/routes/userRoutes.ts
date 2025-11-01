@@ -10,10 +10,10 @@ import {
 
 const router = Router();
 
-router.get('/profile', authMiddleware, getUserProfile);
-router.patch('/profile', authMiddleware, updateUserProfile);
+router.get('/me', authMiddleware, getUserProfile);
+router.patch('/me', authMiddleware, updateUserProfile);
 router.put('/password', authMiddleware, updatePassword);
-router.post('/watchlist', authMiddleware, addToWatchlist);
+router.post('/watchlist/:movieId', authMiddleware, addToWatchlist);
 router.delete('/watchlist/:movieId', authMiddleware, removeFromWatchlist);
 
 export const userRouter = router;
