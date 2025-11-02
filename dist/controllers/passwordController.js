@@ -8,8 +8,12 @@ import { RESET_PASSWORD_REDIRECT_URL } from "../env.js";
 const userCollection = db.collection("users");
 export const requestPasswordReset = async (req, res) => {
     const { email } = req.body;
-    const snapshot = await userCollection.where("email", "==", email).get();
+    const snapshot = await userCollection
+        .where("email", "==", email.trim().toLowerCase())
+        .get();
     if (snapshot.empty) {
+        console.log("Searching for email:", email);
+        console.log("Docs found:", snapshot.size);
         return errorHandler({ status: 404, message: "Email not found" }, req, res, () => { });
     }
     const userDoc = snapshot.docs[0];

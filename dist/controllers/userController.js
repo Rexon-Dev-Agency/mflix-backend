@@ -137,4 +137,5 @@ export const removeFromWatchlist = async (req, res) => {
         errorHandler({ status: 500, message: error.message || "Server error while removing from watchlist" }, req, res, () => { });
     }
 };
+// get watchlist controller
 //# sourceMappingURL=userController.js.map
