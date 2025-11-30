@@ -1,0 +1,1 @@
+{"version":3,"file":"paystack.d.ts","sourceRoot":"","sources":["../../src/utils/paystack.ts"],"names":[],"mappings":"AAKA,MAAM,WAAW,mBAAmB;IAChC,KAAK,EAAE,MAAM,CAAC;IACd,QAAQ,EAAE,MAAM,CAAC;IACjB,MAAM,EAAE,MAAM,CAAC;CAClB;AAED,eAAO,MAAM,mBAAmB,GAAU,8BAIvC,mBAAmB;;;;;;EAmCrB,CAAC;AAEF,eAAO,MAAM,iBAAiB,GAAU,WAAW,MAAM,iBASxD,CAAC"}

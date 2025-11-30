@@ -5,6 +5,8 @@ import morgan from 'morgan';
 import { authRouter } from './routes/authRoutes.js';
 import { userRouter } from './routes/userRoutes.js';
 import { passwordRouter } from './routes/passwordRoute.js';
+import { subscriptionRouter } from './routes/subscriptionRoutes.js';
+import { streamRouter } from './routes/streamRoutes.js';
 import { errorHandler } from './handlers/errorHandlers.js';
 import { notFoundHandler } from './handlers/notFoundHandler.js';
 const app = express();
@@ -17,6 +19,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 app.use('/api/password', passwordRouter);
+app.use('/api/stream', streamRouter);
+app.use('/api/subscriptions', subscriptionRouter);
 // Handler Routes
 app.use(notFoundHandler);
 app.use(errorHandler);

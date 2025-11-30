@@ -10,4 +10,6 @@ export declare const SMTP_PORT: number | undefined;
 export declare const SMTP_USER: string | undefined;
 export declare const SMTP_PASS: string | undefined;
 export declare const RESET_PASSWORD_REDIRECT_URL: string | undefined;
+export declare const API_KEY_TMDB: string | undefined;
+export declare const PAYSTACK_SECRET_KEY: string | undefined;
 //# sourceMappingURL=env.d.ts.map

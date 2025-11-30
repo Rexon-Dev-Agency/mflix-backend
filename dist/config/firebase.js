@@ -15,4 +15,8 @@ admin.initializeApp({
 admin.firestore().settings({ ignoreUndefinedProperties: true });
 export const db = admin.firestore();
 export const auth = admin.auth();
+export const subscriptionsCollection = db.collection("subscriptions");
+export const usersCollection = db.collection("users");
+export const plansCollection = db.collection("plans");
+export const sessionsCollection = db.collection("devices");
 //# sourceMappingURL=firebase.js.map

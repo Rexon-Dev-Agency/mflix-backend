@@ -5,6 +5,7 @@ import { sendSuccess } from "../handlers/responseHandler.js";
 import { formatDate } from "../utils/helper.js";
 import { isValidEmail } from "../utils/validation.js";
 import { comparePasswords, hashPassword } from "../utils/passwordHashing.js";
+import { getSubscription } from "../utils/subscription.js";
 
 const usersCollection = db.collection("users");
 
@@ -23,6 +24,26 @@ export const getUserProfile = async (req: Request, res: Response) => {
     }catch (error: any) {
         console.error("Get User Profile Error:", error);
         errorHandler({ status: 500, message: error.message || "Server error while fetching user profile" }, req, res, () => { });
+    }
+};
+
+export const getUserSubscriptionInfo = async (req: Request, res: Response) => {
+    try{
+        const userId = req.user?.id;
+        if (!userId) {
+            return errorHandler({ status: 401, message: "Unauthorized: User not authenticated" }, req, res, () => {});
+        }
+
+        const subscription = await getSubscription(userId);
+        if (!subscription || subscription instanceof Error) {
+            return errorHandler({ status: 404, message: "Subscription not found, get a plan." }, req, res, () => { });
+        }
+        sendSuccess(res, { subscription }, "User subscription info fetched successfully");
+
+ 
+    } catch (error: any) {
+        console.error("Get User Subscription Info Error:", error);
+        errorHandler({ status: 500, message: error.message || "Server error while fetching subscription info" }, req, res, () => { });
     }
 };
 

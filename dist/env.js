@@ -12,4 +12,6 @@ export const SMTP_PORT = process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT)
 export const SMTP_USER = process.env.SMTP_USER;
 export const SMTP_PASS = process.env.SMTP_PASS;
 export const RESET_PASSWORD_REDIRECT_URL = process.env.RESET_PASSWORD_REDIRECT_URL;
+export const API_KEY_TMDB = process.env.API_KEY_TMDB;
+export const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
 //# sourceMappingURL=env.js.map
