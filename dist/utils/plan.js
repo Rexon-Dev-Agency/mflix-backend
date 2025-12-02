@@ -1,7 +1,7 @@
-import { db } from "../config/firebase.js";
 import { plansCollection } from "../config/firebase.js";
 ;
 export const getPlanById = async (planId) => {
+    console.log("Fetching plan by ID:", planId);
     const planDoc = await plansCollection.doc(planId).get();
     if (!planDoc.exists)
         return null;

@@ -21,14 +21,14 @@ export const createSession = async (
     });
 };
 
-export const updateSessionActivity = async (deviceId: string) => {
-    await sessionsCollection.doc(deviceId).update({
+export const updateSessionActivity = async (userId: string, deviceId: string) => {
+    await sessionsCollection.doc(`${userId}_${deviceId}`).update({
         lastActiveAt: new Date(),
     });
 };
 
-export const endSession = async (deviceId: string) => {
-    await sessionsCollection.doc(deviceId).delete();
+export const endSession = async (userId: string, deviceId: string) => {
+    await sessionsCollection.doc(`${userId}_${deviceId}`).delete();
 };
 
 export const getUserSessions = async (userId: string): Promise<DeviceSession[]> => {

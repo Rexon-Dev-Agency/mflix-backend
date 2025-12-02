@@ -1,4 +1,4 @@
-export declare const fetchStreamUrl: (movieId: string, meta: {
+export declare const fetchStreamUrl: (movieId: number, meta: {
     type: "movie" | "tv";
     season?: number;
     episode?: number;

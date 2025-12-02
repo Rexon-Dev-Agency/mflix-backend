@@ -11,7 +11,7 @@ export interface Subscription {
     paystackSubscriptionId?: string;
     paystackCustomerId?: string;
 }
-export declare const createOrUpdateSubscription: (userId: string, payload: Partial<Subscription>) => Promise<void>;
+export declare const createOrUpdateSubscription: (userId: string, payload: Partial<Subscription>) => Promise<any>;
 export declare const getSubscription: (userId: string) => Promise<Error | FirebaseFirestore.DocumentData | undefined>;
 export declare const cancelSubscription: (userId: string) => Promise<void>;
 //# sourceMappingURL=subscription.d.ts.map

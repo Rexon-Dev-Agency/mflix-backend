@@ -8,13 +8,13 @@ export const createSession = async (sessions) => {
         createdAt: new Date(now),
     });
 };
-export const updateSessionActivity = async (deviceId) => {
-    await sessionsCollection.doc(deviceId).update({
+export const updateSessionActivity = async (userId, deviceId) => {
+    await sessionsCollection.doc(`${userId}_${deviceId}`).update({
         lastActiveAt: new Date(),
     });
 };
-export const endSession = async (deviceId) => {
-    await sessionsCollection.doc(deviceId).delete();
+export const endSession = async (userId, deviceId) => {
+    await sessionsCollection.doc(`${userId}_${deviceId}`).delete();
 };
 export const getUserSessions = async (userId) => {
     const snapshot = await sessionsCollection.where("userId", "==", userId).get();

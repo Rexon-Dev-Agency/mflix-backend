@@ -1,9 +1,10 @@
 export interface SubscribeUserParams {
+    userId: string;
     email: string;
     planCode: string;
-    userId: string;
+    amount: number;
 }
-export declare const subscribeUserToPlan: ({ email, planCode, userId, }: SubscribeUserParams) => Promise<{
+export declare const subscribeUserToPlan: ({ userId, email, planCode, amount, }: SubscribeUserParams) => Promise<{
     subscriptionId: any;
     planCode: string;
     status: any;

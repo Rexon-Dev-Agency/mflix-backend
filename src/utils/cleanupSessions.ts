@@ -14,7 +14,7 @@ export const cleanupIdleSessions = async (maxIdleMinutes: number = 30): Promise<
 
         // Delete sessions individually or in batches if needed
         const deletePromises = idleSessions.map(session =>
-            endSession(`${session.userId}_${session.deviceId}`)
+            endSession(session.userId, session.deviceId)
         );
 
         await Promise.all(deletePromises);

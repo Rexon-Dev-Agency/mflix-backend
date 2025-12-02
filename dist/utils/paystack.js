@@ -1,10 +1,10 @@
 import { apiClient } from "./apiClient.js";
 import { PAYSTACK_SECRET_KEY } from "../env.js";
 const PAYSTACK_BASE_URL = "https://api.paystack.co";
-export const subscribeUserToPlan = async ({ email, planCode, userId, }) => {
+export const subscribeUserToPlan = async ({ userId, email, planCode, amount, }) => {
     try {
         // Initialize subscription via Paystack API
-        const url = `${PAYSTACK_BASE_URL}/subscription`;
+        const url = `${PAYSTACK_BASE_URL}/transaction/initialize`;
         const config = {
             method: "POST",
             headers: {
@@ -12,9 +12,9 @@ export const subscribeUserToPlan = async ({ email, planCode, userId, }) => {
                 "Content-Type": "application/json",
             },
             data: {
-                customer: email,
+                email: email,
+                amount: amount * 100, // convert to kobo
                 plan: planCode,
-                start: Math.floor(Date.now() / 1000), // subscription start timestamp
             },
         };
         const response = await apiClient(url, config);

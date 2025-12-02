@@ -2,11 +2,11 @@ import type { Request, Response } from "express";
 import { errorHandler } from "../handlers/errorHandlers.js";
 import { sendSuccess } from "../handlers/responseHandler.js";
 import { subscribeUserToPlan } from "../utils/paystack.js";
-import { getPlanById } from "../utils/plan.js";
+import { getPlanById, planList } from "../utils/plan.js";
 import { createOrUpdateSubscription, cancelSubscription, getSubscription } from "../utils/subscription.js";
 
 export const subscribeToPlan = async (req: Request, res: Response) => {
-    const { planId } = req.body;
+    const { planId } = req.params;
     const user = req.user;
 
     if (!planId || !user?.email || !user?.id) {
@@ -34,10 +34,11 @@ export const subscribeToPlan = async (req: Request, res: Response) => {
             email: user.email,
             planCode: plan.paystackPlanCode,
             userId: user.id,
+            amount: plan.price,
         });
 
         // Save subscription locally
-        await createOrUpdateSubscription(user.id, {
+        const subscription = await createOrUpdateSubscription(user.id, {
             planId: plan.id,
             paystackSubscriptionId: paystackResponse.subscriptionId,
             status: "active",
@@ -47,7 +48,7 @@ export const subscribeToPlan = async (req: Request, res: Response) => {
 
         return sendSuccess(res, {
             message: "Subscription created successfully",
-            subscription: paystackResponse,
+            subscription,
         });
     } catch (error: any) {
         console.error("Subscription Error:", error);
@@ -69,13 +70,24 @@ export const getSubscriptionInfo = async (req: Request, res: Response) => {
     }
 
     try {
-        
         const subscriptionData = await getSubscription(userId);
         return sendSuccess(res, { subscription: subscriptionData }, "Subscription fetched successfully");
     } catch (error: any) {
         console.error("Get Subscription Info Error:", error);
         return errorHandler(
             { status: 500, message: error.message || "Failed to fetch subscription info" }, req, res,  () => {}
+        );
+    }
+};
+
+export const getAvailablePlans = async (req: Request, res: Response) => {
+    try {
+        const plans = await planList();
+        return sendSuccess(res, { plans }, "Available plans fetched successfully");
+    } catch (error: any) {
+        console.error("Get Available Plans Error:", error);
+        return errorHandler(
+            { status: 500, message: error.message || "Failed to fetch available plans" }, req, res, () => {}
         );
     }
 };

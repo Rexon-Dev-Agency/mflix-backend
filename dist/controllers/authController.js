@@ -1,4 +1,4 @@
-import { db } from "../config/firebase.js";
+import { usersCollection } from "../config/firebase.js";
 import { comparePasswords, hashPassword } from "../utils/passwordHashing.js";
 import { sendSuccess } from "../handlers/responseHandler.js";
 import { errorHandler } from "../handlers/errorHandlers.js";
@@ -7,7 +7,6 @@ import { isValidEmail, isValidPassword } from "../utils/validation.js";
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../utils/token.js";
 import { hashToken } from "../utils/crypto.js";
 import { saveRefreshTokenRecord, findRefreshTokenRecord, revokeRefreshTokenRecord } from "../services/refreshTokenService.js";
-const usersCollection = db.collection("users");
 export const register = async (req, res) => {
     const { email, password: rawPassword } = req.body;
     const password = rawPassword.trim();

@@ -7,8 +7,8 @@ export interface DeviceSession {
     createdAt: Date;
 }
 export declare const createSession: (sessions: DeviceSession) => Promise<void>;
-export declare const updateSessionActivity: (deviceId: string) => Promise<void>;
-export declare const endSession: (deviceId: string) => Promise<void>;
+export declare const updateSessionActivity: (userId: string, deviceId: string) => Promise<void>;
+export declare const endSession: (userId: string, deviceId: string) => Promise<void>;
 export declare const getUserSessions: (userId: string) => Promise<DeviceSession[]>;
 export declare const getAllSessionsIdleBefore: (cutoffDate: Date) => Promise<DeviceSession[]>;
 export declare const endIdleSessions: (maxIdleMinutes?: number) => Promise<void>;

@@ -1,4 +1,4 @@
-export const fetchStreamUrl = async (movieId: string, meta: { type: "movie" | "tv"; season?: number; episode?: number }): Promise<string> => {
+export const fetchStreamUrl = async (movieId: number, meta: { type: "movie" | "tv"; season?: number; episode?: number }): Promise<string> => {
     if (meta.type === "movie") {
     // Movie URL
     return `https://player.autoembed.cc/embed/movie/${movieId}`;

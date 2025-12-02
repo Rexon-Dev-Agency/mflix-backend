@@ -2,11 +2,13 @@ import { subscriptionsCollection } from "../config/firebase.js";
 export const createOrUpdateSubscription = async (userId, payload) => {
     const userRef = await subscriptionsCollection.doc(userId);
     const now = Date.now();
-    await userRef.set({
+    const subscriptionData = {
         ...payload,
         updatedAt: new Date(now),
         ...(payload.createdAt ? {} : { createdAt: new Date(now) }),
-    }, { merge: true });
+    };
+    await userRef.set(subscriptionData, { merge: true });
+    return subscriptionData;
 };
 export const getSubscription = async (userId) => {
     const userSub = await subscriptionsCollection.doc(userId).get();

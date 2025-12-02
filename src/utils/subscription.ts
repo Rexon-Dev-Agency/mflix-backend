@@ -23,11 +23,14 @@ export const createOrUpdateSubscription = async (
     const userRef = await subscriptionsCollection.doc(userId);
     const now = Date.now();
 
-    await userRef.set({
+    const subscriptionData = {
         ...(payload as any),
         updatedAt: new Date(now),
         ...(payload.createdAt ? {} : { createdAt: new Date(now) }),
-    }, { merge: true})
+    };
+
+    await userRef.set(subscriptionData, { merge: true });
+    return subscriptionData;
 };
 
 export const getSubscription = async (userId: string) => {

@@ -1,5 +1,5 @@
 import type{ Request, Response } from "express";
-import { db } from "../config/firebase.js";
+import { usersCollection } from "../config/firebase.js";
 import { comparePasswords, hashPassword } from "../utils/passwordHashing.js";
 import { sendSuccess } from "../handlers/responseHandler.js";
 import { errorHandler } from "../handlers/errorHandlers.js";
@@ -9,8 +9,6 @@ import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from ".
 import { hashToken } from "../utils/crypto.js";
 import { saveRefreshTokenRecord, findRefreshTokenRecord, revokeRefreshTokenRecord } from "../services/refreshTokenService.js";
 
-
-const usersCollection = db.collection("users");
 
 export const register = async (req: Request, res: Response) => {
     const { email, password: rawPassword } = req.body;

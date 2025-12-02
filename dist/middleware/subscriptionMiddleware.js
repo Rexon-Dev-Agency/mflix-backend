@@ -1,6 +1,5 @@
 import { getSubscription, cancelSubscription } from "../utils/subscription.js";
 import { errorHandler } from "../handlers/errorHandlers.js";
-import { getPlanById } from "../utils/plan.js";
 import { getUserSessions, createSession } from "../utils/session.js";
 export const checkSubscription = async (req, res, next) => {
     try {
@@ -20,7 +19,8 @@ export const checkSubscription = async (req, res, next) => {
         if (subscription.status !== "active") {
             return errorHandler({ status: 403, message: "Subscription is expired or inactive" }, req, res, next);
         }
-        const plan = await getPlanById(subscription.planId);
+        const plan = subscription.planId;
+        console.log("User plan:", plan);
         if (!plan) {
             return errorHandler({ status: 500, message: "Subscription plan not found" }, req, res, next);
         }

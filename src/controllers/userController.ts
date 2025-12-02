@@ -1,13 +1,9 @@
 import type{ Request, Response } from "express";
-import { db } from "../config/firebase.js";
 import { errorHandler } from "../handlers/errorHandlers.js";
 import { sendSuccess } from "../handlers/responseHandler.js";
-import { formatDate } from "../utils/helper.js";
 import { isValidEmail } from "../utils/validation.js";
 import { comparePasswords, hashPassword } from "../utils/passwordHashing.js";
-import { getSubscription } from "../utils/subscription.js";
-
-const usersCollection = db.collection("users");
+import { usersCollection } from "../config/firebase.js";
 
 export const getUserProfile = async (req: Request, res: Response) => {
     try{
@@ -27,25 +23,6 @@ export const getUserProfile = async (req: Request, res: Response) => {
     }
 };
 
-export const getUserSubscriptionInfo = async (req: Request, res: Response) => {
-    try{
-        const userId = req.user?.id;
-        if (!userId) {
-            return errorHandler({ status: 401, message: "Unauthorized: User not authenticated" }, req, res, () => {});
-        }
-
-        const subscription = await getSubscription(userId);
-        if (!subscription || subscription instanceof Error) {
-            return errorHandler({ status: 404, message: "Subscription not found, get a plan." }, req, res, () => { });
-        }
-        sendSuccess(res, { subscription }, "User subscription info fetched successfully");
-
- 
-    } catch (error: any) {
-        console.error("Get User Subscription Info Error:", error);
-        errorHandler({ status: 500, message: error.message || "Server error while fetching subscription info" }, req, res, () => { });
-    }
-};
 
 export const updateUserProfile = async (req: Request, res: Response) => {
     try{
@@ -185,5 +162,24 @@ export const removeFromWatchlist = async (req: Request, res: Response) => {
     }
 };
 
+export const getWatchlist = async (req: Request, res: Response) => {
+    try {
+        const userId = req.user?.id;
+        if (!userId) {
+            return errorHandler({ status: 401, message: "Unauthorized: User not authenticated" }, req, res, () => { });
+        }
 
-// get watchlist controller
+        const userDoc = await usersCollection.doc(userId).get();
+        if (!userDoc.exists) {
+            return errorHandler({ status: 404, message: "User not found" }, req, res, () => { });
+        }
+
+        const userData = userDoc.data();
+        const watchlist: string[] = userData?.watchlist || [];
+
+        sendSuccess(res, { watchlist }, "Watchlist fetched successfully");
+    } catch (error: any) {
+        console.error("Get Watchlist Error:", error);
+        errorHandler({ status: 500, message: error.message || "Server error while fetching watchlist" }, req, res, () => { });
+    }
+};

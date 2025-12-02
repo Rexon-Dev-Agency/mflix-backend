@@ -4,7 +4,6 @@ import {
     SMTP_PORT,
     SMTP_USER,
     SMTP_PASS,
-    RESET_PASSWORD_REDIRECT_URL,
 } from "../env.js"
 
 const transporter = nodemailer.createTransport({

@@ -1,5 +1,5 @@
-import { db } from "../config/firebase.js";
 import { plansCollection } from "../config/firebase.js";
+
 
 export interface Plan {
     id: string;            // document id (eg: 'freemium', 'premium')
@@ -13,6 +13,7 @@ export interface Plan {
 
 
 export const getPlanById = async (planId: string): Promise<Plan | null> => {
+    console.log("Fetching plan by ID:", planId);
     const planDoc = await plansCollection.doc(planId).get();
     if (!planDoc.exists) return null;
     return { id: planDoc.id, ...planDoc.data() } as Plan;
