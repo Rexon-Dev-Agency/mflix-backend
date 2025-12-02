@@ -2,7 +2,6 @@ import { errorHandler } from "../handlers/errorHandlers.js";
 import { sendSuccess } from "../handlers/responseHandler.js";
 import { isValidEmail } from "../utils/validation.js";
 import { comparePasswords, hashPassword } from "../utils/passwordHashing.js";
-import { getSubscription } from "../utils/subscription.js";
 import { usersCollection } from "../config/firebase.js";
 export const getUserProfile = async (req, res) => {
     try {

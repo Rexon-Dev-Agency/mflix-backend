@@ -1,12 +1,11 @@
 import { Router } from "express";
 import { authMiddleware } from "../middleware/authMiddleware.js";
-import { checkSubscription } from "../middleware/subscriptionMiddleware.js";
 import { 
     getUserProfile, 
     updateUserProfile, 
     updatePassword, 
     addToWatchlist, 
-    removeFromWatchlist,
+    removeFromWatchlist
 } from "../controllers/userController.js";
 
 const router = Router();
